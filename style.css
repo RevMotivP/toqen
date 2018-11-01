@@ -1,0 +1,360 @@
+* {
+    box-sizing: border-box;
+}
+
+#toast-container {
+    font-size: 12px;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif !important;
+    line-height: 1.3em;
+    text-align: justify;
+}
+
+.toast {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2) !important;
+    width: 400px !important;
+}
+
+body {
+    background-color: #EEE;
+    color: rgba(0, 0, 0, 0.7);
+    font-family: 'Roboto', sans-serif;
+    font-size: 0;
+    min-height: 800px;
+    margin: 0;
+}
+
+header {
+    background-image: linear-gradient(to right, #3c1477 0%, #611f62 100%);
+    color: #FFFFFF;
+    padding: 20px 200px;
+}
+
+nav {
+    background-image: linear-gradient(to right, #241145 0%, #2f1330 100%);
+    padding: 0 130px;
+    font-weight: bold;
+}
+
+nav ul {
+    padding: 0;
+}
+
+nav li {
+    font-size: 12px;
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 0 50px;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    transition: 0.1s color;
+}
+
+nav li:hover {
+    color: rgba(255, 255, 255, 1);
+}
+
+#logo {
+    background-image: url("imgs/logo.png");
+    width: 348px;
+    height: 60px;
+    background-size: 348px 60px;
+    display: inline-block;
+}
+
+#account {
+    float: right;
+    display: inline-block;
+}
+
+#account img {
+    width: 60px;
+    height: 60px;
+    border-radius: 3px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.account p,
+#account p {
+    font-size: 10px;
+    font-family: 'Inconsolata', monospace;
+    display: inline-block;
+    width: 120px;
+    word-wrap: break-word;
+    vertical-align: middle;
+    margin: 0 20px;
+    text-align: center;
+    line-height: 1.3em;
+}
+
+.account p {
+    margin: 0 0 0 10px;
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.account.own p {
+    color: rgba(0, 0, 0, 1);
+}
+
+.account.own p::after {
+    content: ' (yours)';
+}
+
+.page {
+    position: absolute;
+    top: 160px;
+    padding: 0 200px 50px 200px;
+    opacity: 1;
+    transition: 1s opacity;
+    margin-bottom: 100px;
+}
+
+.page.hidden {
+    margin-top: -99999px;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    display: block;
+}
+
+.hidden {
+    display: none;
+}
+
+#intro_screen,
+#loading_screen {
+    background-color: rgba(255, 255, 255, 0.3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    text-align: center;
+}
+
+#loading_screen {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+#intro_screen {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+#intro_screen #intro_screen_window {
+    width: 400px;
+    padding: 5px 20px 10px 20px;
+    border-radius: 3px;
+    background-color: #FFFFFF;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+}
+
+#loading_screen img {
+    margin-top: calc(50vh - 32px);
+    width: 64px;
+    height: 64px;
+}
+
+img {
+    vertical-align: middle;
+}
+
+input {
+    padding: 10px 20px;
+    border-radius: 3px;
+    border: none;
+    font-size: 12px;
+    margin: 5px 5px 5px 0;
+    width: 300px;
+}
+
+input[disabled] {
+    background-color: #DDD;
+    color: #888;
+}
+
+input[type=number] {
+    width: 150px;
+}
+
+input[type=button] {
+    cursor: pointer;
+    background-color: #7417F6;
+    color: #FFFFFF;
+    font-weight: bold;
+    transition: 100ms background-color;
+    width: 120px;
+}
+
+input[type=button]:hover {
+    background-color: #6e17e2;
+}
+
+input:focus {
+    outline: none;
+}
+
+h1 {
+    font-size: 30px;
+    font-weight: lighter;
+    margin: 80px 0 40px 0;
+}
+
+h2 {
+    font-size: 24px;
+    font-weight: lighter;
+    margin: 50px 0 20px 0;
+}
+
+p {
+    max-width: 700px;
+    line-height: 1.7em;
+    text-align: justify;
+    margin: 10px 0 30px 0;
+}
+
+a {
+    color: #06B;
+    text-decoration: none;
+}
+
+table {
+    margin: 20px 0;
+    border-radius: 3px;
+    border-spacing: 0;
+    font-family: 'Inconsolata', monospace;
+}
+
+table tr:first-child th:first-child { border-top-left-radius: 3px; }
+table tr:first-child th:last-child { border-top-right-radius: 3px; }
+table tr:last-child td:first-child { border-bottom-left-radius: 3px; }
+table tr:last-child td:last-child { border-bottom-right-radius: 3px; }
+
+table td,
+table th {
+    font-size: 12px;
+    min-width: 100px;
+    text-align: left;
+}
+
+#hashtable td,
+#hashtable th {
+    text-align: right;
+}
+
+table#iam_table td {
+    padding: 2px 5px;
+    min-width: 0;
+}
+
+table#iam_table th,
+table#iam_table td {
+    min-width: 0;
+}
+
+table th {
+    background-color: #DDD;
+    padding: 10px 20px;
+}
+
+table td {
+    background-color: #FFF;
+    padding: 2px 20px;
+    font-size: 10px;
+}
+
+tr.input_row td:nth-child(1)::before {
+    content: '#';
+}
+
+#total_output_value::before,
+#total_input_value::before,
+tr.input_row td:nth-child(2)::before {
+    content: 'TQN ';
+}
+
+table td input[type=button] {
+    padding: 2px 5px;
+    width: auto;
+    margin: 1px 0;
+    min-width: 60px;
+}
+
+p {
+    font-size: 12px;
+}
+
+#total_output_value,
+#total_input_value {
+    font-weight: bold;
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+#send_transfer_button {
+    margin-top: 30px;
+    display: block;
+}
+
+#iams {
+    margin: 30px 0;
+}
+
+#iams .iam {
+    display: inline-block;
+    width: 128px;
+    margin: 0 20px 0 0;
+    text-align: center;
+}
+
+#iams img {
+    border-radius: 5px;
+    border: 1px solid #DDD;
+    margin-bottom: 10px;
+}
+
+#iams .iam .id {
+    font-size: 10px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    font-family: 'Inconsolata', monospace;
+}
+
+#iams .iam input[type=button] {
+    margin-top: 15px;
+}
+
+#send_transfer_button {
+    width: 200px;
+    background-color: #A239CA;
+}
+
+#send_transfer_button:hover {
+    background-color: #9033b3;
+}
+
+.loading {
+    -webkit-animation:spin 0.4s linear infinite;
+    -moz-animation:spin 0.4s linear infinite;
+    animation:spin 0.4s linear infinite;
+    width: 32px;
+    height: 32px;
+}
+
+@-moz-keyframes spin {
+    from { -moz-transform: rotate(0deg); }
+    to { -moz-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
+}

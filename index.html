@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>TOQEN Wallet (qApp)</title>
+
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="../../deps/toastr/toastr.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="./imgs/favicon.ico">
+
+	<script type="text/javascript" src="../../deps/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="../../deps/toastr/toastr.min.js"></script>
+	<script type="text/javascript" src="../../deps/qlite.js/qlite.js"></script>
+    <script type="text/javascript" src="../../deps/identicon.js/pnglib.js"></script>
+    <script type="text/javascript" src="../../deps/identicon.js/identicon.js"></script>
+    <script type="text/javascript" src="../../deps/md5/md5.min.js"></script>
+    <script type="text/javascript" src="js/qlite_error_wrap.js"></script>
+    <script type="text/javascript" src="js/microhash.js"></script>
+    <script type="text/javascript" src="deps/sha256.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="UTF-8">
+</head>
+<body id="body">
+
+<header>
+    <div id="logo"></div>
+    <div id="account"></div>
+</header>
+<nav>
+    <ul>
+        <li onclick="show_page('account_page')">send toqen transfer</li>
+        <li onclick="show_page('settle_mhc')">monitor microhashes (<label id="mhc_count">0</label>)</li>
+    </ul>
+</nav>
+
+<div id="loading_screen">
+    <img class="loading" src="imgs/loading.png" />
+</div>
+
+<div id="intro_screen" class="page hidden"><div id="intro_screen_window">
+    <p><b>TOQEN</b> is currently in a proof-of-concept phase and has to be treated accordingly. Consider it a testing platform (testnet) for now and do not use it for anything serious.
+    Do not give it any value, as it is not yet secured against attacks.</p>
+    <input type="button" value="okay" onclick="hide_intro();" />
+</div></div>
+
+<div class="page" id="account_page">
+    <h1>Pick your Account</h1>
+    <p>These are all IAM accounts we could find on your ql-node. Make sure they are not used for anything else if you intend to use them as toqen accounts.</p>
+
+    <h2>Your Accounts</h2>
+    <div id="iams"></div>
+</div>
+
+<div class="page hidden" id="create_mhc">
+    <h1>Create MicroHash Channel</h1>
+    <p>MicroHash is a off-chain settlement layer for TOQEN enabled by the first Qubic Lite smart contract. Create a direct MicroHash channel for almost instant micro-payment flows.</p>
+
+    <input type="text" placeholder="payer" id="mhc_payer" disabled />
+    <input type="number" placeholder="payer index" id="mhc_payer_index" /><br/>
+    <input type="text" placeholder="payee" id="mhc_payee" />
+    <input type="number" placeholder="payee index" id="mhc_payee_index" /><br/>
+    <input type="number" placeholder="TQN / microhash" id="step" /><br/>
+    <input type="number" placeholder="deposit epoch" id="deposit_epoch" />
+    <input type="button" value="create" id="create_mhc_button" onclick="create_mhc_if_not_existent();" />
+
+    <h2 class="hidden" id="hashtable_hl">MicroHash Table</h2>
+    <table id="hashtable" class="hidden"></table>
+</div>
+
+<div class="page hidden" id="settle_mhc">
+    <h1>MicroHash Channels</h1>
+    <p>MicroHash is an off-chain settlement layer for TOQEN enabled by the first Qubic Lite smart contract. It allows for almost instant micro-payment flows.
+        By settling the off-chain transactions, the channel is destroyed and the end balances are released to both participants through an on-chain settlement
+        transaction on the TOQEN Network .</p>
+
+    <input type="number" placeholder="creation epoch" id="mhc_opening_epoch" />
+    <input type="button" value="add" id="load_mhc_button" onclick="load_mhc();" /><br/>
+
+    <table id="channels">
+        <tr>
+            <th>epoch</th>
+            <th>state</th>
+            <th>payer</th>
+            <th>payee</th>
+            <th>microhash</th>
+            <th>claimed</th>
+            <th>actions</th>
+        </tr>
+    </table>
+</div>
+
+<div class="page hidden" id="account_index_page">
+
+    <h1>Pick your Account Index</h1>
+    <p>Your account index is a non-negative integer acting as one-time address that can receive funds from up to five inputs and spend them once by sending up to five outputs. Toqens are sent from indexes to indexes of the involved accounts. You can find all your indexes with available funds on the <a target="_blank" id="explorer_link_without_index">toqen explorer</a>.</p>
+    <input type="number" placeholder="account index" id="account_index" />
+    <input type="button" value="select" onclick="select_account_index(parseInt($('#account_index').val()))" /><br/>
+
+    <h1>MicroHash Channels</h1>
+    <p>MicroHash is a off-chain settlement layer for TOQEN enabled by the first Qubic Lite smart contract. It allows for almost instant micro-payment flows.</p>
+    <input type="button" value="new channel" onclick="$('#hashtable_hl').addClass('hidden');$hashtable.addClass('hidden');show_page('create_mhc');" />
+</div>
+
+<div class="page hidden" id="transfer_page">
+
+    <h2>Inputs</h2>
+    <p>You can find your inputs on the <a target="_blank" id="explorer_link">toqen explorer</a>.</p>
+    <input type="number" placeholder="epoch" id="input_epoch" />
+    <input type="button" value="add" id="button_add_input" onclick="add_input($('#input_epoch').val());" />
+
+    <table id="input_table">
+        <tr>
+            <th>epoch</th>
+            <th>value</th>
+            <th></th>
+        </tr>
+    </table>
+
+    <p>total balance: <label id="total_input_value">0</label></p>
+
+    <h2>Outputs</h2>
+    <input type="text" placeholder="receiver address" id="output_address" />
+    <input type="number" placeholder="receiver index" id="output_index" />
+    <input type="number" placeholder="value" id="output_value" />
+    <input type="button" value="add" onclick="add_output($('#output_address').val(), $('#output_index').val(), $('#output_value').val());" /><br/>
+
+    <table id="output_table">
+        <tr>
+            <th>receiver account</th>
+            <th>type</th>
+            <th>value</th>
+            <th></th>
+        </tr>
+    </table>
+    <input type="button" value="add remainder" onclick="add_remainder();" />
+
+    <p>total sent: <label id="total_output_value">0</label></p>
+
+    <h2>Send Transfer</h2>
+    <input type="button" value="send" id="send_transfer_button" onclick="send_transfer();" />
+</div>
+
+<!-- fill with content ... -->
+<script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>
