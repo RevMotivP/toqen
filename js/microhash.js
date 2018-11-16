@@ -150,7 +150,7 @@ function load_mhc() {
         if(opening['error_type'])
             return error("an error occured in epoch #" + opening_epoch + ": " + opening['error_type']);
         if(!opening['deposit_epoch'])
-            return error("epoch #" + opening_epoch + " does not upen up a new channel, but settles an old channel.");
+            return error("epoch #" + opening_epoch + " does not open up a new channel, but settles an old channel.");
 
         var already_loaded = false;
         channels.forEach(function (mhc, index) {
